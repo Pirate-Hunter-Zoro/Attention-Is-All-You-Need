@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(nvidia-smi)",
+      "Bash(python3 -c \"import torch; print\\(f''PyTorch {torch.__version__}, CUDA available: {torch.cuda.is_available\\(\\)}''\\)\")",
+      "Bash(conda --version)"
+    ]
+  }
+}
