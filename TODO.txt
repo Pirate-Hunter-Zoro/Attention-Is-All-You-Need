@@ -14,12 +14,12 @@ COMPLETED:
   [x] GPU verified: NVIDIA A40, 46GB VRAM, CUDA working
   [x] Training data downloaded: shakespeare.txt (TinyShakespeare, ~1MB)
   [x] Write config.py -- hyperparameters (batch_size, block_size, n_embd, n_head, etc.)
-  [x] Write model.py Head class -- single-head self-attention (key/query/value projections,
-      scaled dot-product attention, causal mask, dropout)
+  [x] Write model.py MultiHeadAttention class -- fused K/Q/V projections (N_EMBD -> N_EMBD),
+      reshape+transpose to split into heads, scaled dot-product attention, causal mask,
+      dropout, output projection (Linear N_EMBD -> N_EMBD)
+      (supersedes original separate Head class approach)
 
 NEXT STEPS (in order, one at a time):
-  [ ] Write model.py MultiHeadAttention class -- nn.ModuleList of Head instances,
-      concatenate outputs along last dim, output projection (Linear N_EMBD -> N_EMBD), dropout
   [ ] Write model.py remaining classes -- FeedForward, Block, full GPT model
   [ ] Write train.py -- data loading, batching, training loop, loss logging
   [ ] Write generate.py -- load trained model, generate text from prompts
@@ -38,6 +38,6 @@ FILE STRUCTURE:
     shakespeare.txt             -- training data
     scripts/
       config.py                 -- hyperparameters (done)
-      model.py                  -- transformer model (in progress -- Head class done)
+      model.py                  -- transformer model (in progress -- MultiHeadAttention done)
     train.py                    -- (to create) training loop
     generate.py                 -- (to create) inference / text generation
