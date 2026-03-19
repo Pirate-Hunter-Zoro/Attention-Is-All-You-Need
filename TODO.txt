@@ -1,0 +1,43 @@
+PROJECT: Mini-GPT from Scratch (for "Attention Is All You Need" Midterm Presentation)
+======================================================================================
+
+GOAL:
+  Build a miniature GPT (decoder-only transformer) in PyTorch, train it on text data,
+  and use the results in a 12-15 minute midterm presentation covering problem motivation,
+  method, experiments/analysis, and insights from the paper.
+
+COMPLETED:
+  [x] Environment setup (conda env "minigpt" with Python 3.10)
+  [x] PyTorch installed via pip (NOT conda -- conda MKL is broken on this server)
+      pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
+  [x] Additional packages: tiktoken, matplotlib
+  [x] GPU verified: NVIDIA A40, 46GB VRAM, CUDA working
+  [x] Training data downloaded: shakespeare.txt (TinyShakespeare, ~1MB)
+  [x] Write config.py -- hyperparameters (batch_size, block_size, n_embd, n_head, etc.)
+  [x] Write model.py Head class -- single-head self-attention (key/query/value projections,
+      scaled dot-product attention, causal mask, dropout)
+
+NEXT STEPS (in order, one at a time):
+  [ ] Write model.py MultiHeadAttention class -- nn.ModuleList of Head instances,
+      concatenate outputs along last dim, output projection (Linear N_EMBD -> N_EMBD), dropout
+  [ ] Write model.py remaining classes -- FeedForward, Block, full GPT model
+  [ ] Write train.py -- data loading, batching, training loop, loss logging
+  [ ] Write generate.py -- load trained model, generate text from prompts
+  [ ] Train on TinyShakespeare (small run, ~5 min on A40)
+  [ ] Review results, save loss curves and sample outputs
+  [ ] (Optional) Scale up: larger dataset (WikiText-103), bigger model, LR scheduler
+  [ ] Build presentation with paper theory + hands-on implementation results
+
+FILE STRUCTURE:
+  Attention-Is-All-You-Need/
+    AttentionIsAllYouNeed.pdf   -- the paper
+    Instruction.pdf             -- presentation requirements
+    CLAUDE.md                   -- project-level instructions for Claude
+    README.md                   -- environment setup notes
+    TODO.txt                    -- this file
+    shakespeare.txt             -- training data
+    scripts/
+      config.py                 -- hyperparameters (done)
+      model.py                  -- transformer model (in progress -- Head class done)
+    train.py                    -- (to create) training loop
+    generate.py                 -- (to create) inference / text generation
