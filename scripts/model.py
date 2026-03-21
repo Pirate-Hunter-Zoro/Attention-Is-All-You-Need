@@ -55,7 +55,9 @@ output projection:                              (BATCH_SIZE, BLOCK_SIZE, N_EMBD)
         v = v.reshape(v.shape[0], v.shape[1], N_HEAD, self.head_size)
         v = v.transpose(1, 2)
         masked_weights = torch.matmul(masked_weights, v)
-        masked_weights = masked_weights.transpose(1, 2).contiguous().reshape(masked_weights.shape[0], masked_weights.shape[1], N_EMBD)
+        masked_weights = masked_weights.transpose(1,2)\
+                    .contiguous()\
+                    .reshape(masked_weights.shape[0], -1, N_EMBD)
         
         # Throw through a last linear layer
         return self.dropout(self.output_projection(masked_weights))
