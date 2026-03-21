@@ -19,8 +19,8 @@ def get_batch(data):
     offsets = torch.arange(BLOCK_SIZE) # (BLOCK_SIZE,) -> 1,2,3,...BLOCK_SIZE
     batches_x_indices = starts.unsqueeze(1) + offsets # (BATCH_SIZE, BLOCK_SIZE)
     batches_y_indices = (starts + 1).unsqueeze(1) + offsets
-    x = data[batches_x_indices]
-    y = data[batches_y_indices] # Target from this sequence is the very next sequence after progressing one character
+    x = data[batches_x_indices].to(DEVICE)
+    y = data[batches_y_indices].to(DEVICE) # Target from this sequence is the very next sequence after progressing one character
     # Now we have our random-start sequences of tokens (each represented with an index)
     return x, y
 
