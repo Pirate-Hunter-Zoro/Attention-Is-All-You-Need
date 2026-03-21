@@ -79,7 +79,7 @@ def main():
             out = estimate_loss(model, train_data, val_data)
             print(f"Epoch {i+1}:\n\
 Training Loss: {out['train_loss']}\n\
-Testing Loss: {out['test_loss']}", flush=True)
+Testing Loss: {out['test_loss']}\n", flush=True)
             
     # Now that the model has trained, let us generate some text
     model.eval()
