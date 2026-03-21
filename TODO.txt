@@ -18,9 +18,16 @@ COMPLETED:
       reshape+transpose to split into heads, scaled dot-product attention, causal mask,
       dropout, output projection (Linear N_EMBD -> N_EMBD)
       (supersedes original separate Head class approach)
+  [x] Write model.py FeedForward class -- two linear layers (N_EMBD -> 4*N_EMBD -> N_EMBD)
+      with ReLU activation and dropout
+  [x] Write model.py Block class -- layer norm + multi-head attention + residual connection,
+      then layer norm + feedforward + residual connection
+  [x] Write model.py MiniGPT class -- token embedding, positional embedding, N_LAYER stacked
+      Blocks, final layer norm, linear language model head projecting to VOCAB_SIZE logits,
+      forward pass, and autoregressive generate method with multinomial sampling
+  [x] Update config.py -- added VOCAB_SIZE
 
 NEXT STEPS (in order, one at a time):
-  [ ] Write model.py remaining classes -- FeedForward, Block, full GPT model
   [ ] Write train.py -- data loading, batching, training loop, loss logging
   [ ] Write generate.py -- load trained model, generate text from prompts
   [ ] Train on TinyShakespeare (small run, ~5 min on A40)
@@ -38,6 +45,6 @@ FILE STRUCTURE:
     shakespeare.txt             -- training data
     scripts/
       config.py                 -- hyperparameters (done)
-      model.py                  -- transformer model (in progress -- MultiHeadAttention done)
+      model.py                  -- transformer model (done -- MultiHeadAttention, FeedForward, Block, MiniGPT)
     train.py                    -- (to create) training loop
     generate.py                 -- (to create) inference / text generation
