@@ -11,4 +11,3 @@ MAX_ITERS = 5000 # Training iterations
 EVAL_INTERVAL = 500 # How often loss is evaluated
 EVAL_ITERS = 200 # Number of batches to average over when calculating loss
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu') # Cuda if available
-VOCAB_SIZE = 100000

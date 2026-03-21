@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from scripts.config import VOCAB_SIZE, N_LAYER, BATCH_SIZE, N_EMBD, N_HEAD, BLOCK_SIZE, DROPOUT
+from scripts.config import N_LAYER, BATCH_SIZE, N_EMBD, N_HEAD, BLOCK_SIZE, DROPOUT
 
 
 class MultiHeadAttention(nn.Module):
@@ -39,9 +39,6 @@ transpose(1,2) back:                            (BATCH_SIZE, BLOCK_SIZE, N_HEAD,
 reshape back:                                   (BATCH_SIZE, BLOCK_SIZE, N_EMBD)
 output projection:                              (BATCH_SIZE, BLOCK_SIZE, N_EMBD)
         """
-        if len(x.shape) != 3 or x.shape[0] != BATCH_SIZE or x.shape[1] != BLOCK_SIZE or x.shape[2] != N_EMBD:
-            raise ValueError(f"Expected input of shape {(BATCH_SIZE, BLOCK_SIZE, N_EMBD)} but received {x.shape}...")
-            
         k = self.key(x)
         k = k.reshape(k.shape[0], k.shape[1], N_HEAD, self.head_size)
         k = k.transpose(1, 2) 
@@ -49,7 +46,7 @@ output projection:                              (BATCH_SIZE, BLOCK_SIZE, N_EMBD)
         q = q.reshape(q.shape[0], q.shape[1], N_HEAD, self.head_size)
         q = q.transpose(1, 2)
         scaled_attention_weights = torch.matmul(q, k.transpose(-2,-1)) * (self.head_size ** -0.5) 
-        masked_weights = scaled_attention_weights.masked_fill(self.tril[:BLOCK_SIZE, :BLOCK_SIZE] == 0, float('-inf'))
+        masked_weights = scaled_attention_weights.masked_fill(self.tril[:x.shape[1], :x.shape[1]] == 0, float('-inf'))
         masked_weights = F.softmax(masked_weights, dim=-1)
         masked_weights = self.dropout(masked_weights)
         
@@ -107,10 +104,11 @@ class Block(nn.Module):
 class MiniGPT(nn.Module):
     # Wraps all base models together
     
-    def __init__(self):
+    def __init__(self, vocab_size: int):
         super().__init__()
+        self.vocab_size = vocab_size
         # For each (indexed) word in our vocabulary, map it to a vector
-        self.global_embedding_table = nn.Embedding(VOCAB_SIZE, N_EMBD)
+        self.global_embedding_table = nn.Embedding(vocab_size, N_EMBD)
         # For each (indexed) word in our context, map it to a vector
         self.context_embedding_table = nn.Embedding(BLOCK_SIZE, N_EMBD)
         # Block layers - how many attention heads we have
@@ -118,7 +116,7 @@ class MiniGPT(nn.Module):
         # Final layer norm
         self.layer_norm = nn.LayerNorm(N_EMBD)
         # Once we have a final embedded output, we need to turn that into logits (probabilities-esque) over our vocabulary
-        self.language_head = nn.Linear(N_EMBD, VOCAB_SIZE)
+        self.language_head = nn.Linear(N_EMBD, vocab_size)
         
     def forward(self, x):
         """Receives vector of token indices
@@ -135,7 +133,7 @@ class MiniGPT(nn.Module):
         """
         embeddings = self.global_embedding_table(x)
         
-        token_indices = torch.arange(BLOCK_SIZE, device=x.device)
+        token_indices = torch.arange(x.shape[1], device=x.device)
         position_embeddings = self.context_embedding_table(token_indices)
         
         # Broadcasting will handle the batch dimension present in the global embeddings
