@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from scripts.config import N_LAYER, BATCH_SIZE, N_EMBD, N_HEAD, BLOCK_SIZE, DROPOUT
+from scripts.config import N_LAYER, N_EMBD, N_HEAD, BLOCK_SIZE, DROPOUT
 
 
 class MultiHeadAttention(nn.Module):
