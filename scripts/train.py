@@ -85,7 +85,7 @@ Testing Loss: {out['test_loss']}\n", flush=True)
     model.eval()
     # Start with a random token - single batch, single token - for our seed
     x = torch.zeros((1,1), dtype=torch.long, device=DEVICE)
-    output_logits = model.generate(x, max_new_tokens=5000).squeeze().tolist()
+    output_logits = model.generate(x, max_new_tokens=50000).squeeze().tolist()
     result = "".join([itos[idx] for idx in output_logits])
     with open((Path(__file__).resolve().parent.parent / "generated.txt"), 'w') as f:
         f.write(result)

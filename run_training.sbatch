@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=minigpt
-#SBATCH --partition=c3_accel
-#SBATCH --time=7-00:00:00
+#SBATCH --partition=c3_short
+#SBATCH --time=09:00:00
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=64G
